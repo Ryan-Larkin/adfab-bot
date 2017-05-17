@@ -1,14 +1,38 @@
-'use strict';
-
+/* eslint-disable */
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-
+import PropTypes from 'prop-types'
 import ChatBubble from './ChatBubble.js'
 import ChatInput from './ChatInput.js'
 import Message from './Message.js'
 import config from '../config.json'
 const io = require('socket.io-client')
 const socket = io(config.domain)
+
+const styles = {
+  chatPanel: {
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1
+  },
+  chatHistory: {
+    overflow: 'scroll'
+  },
+  chatbubbleWrapper: {
+    marginTop: 10,
+    marginBottom: 10,
+    overflow: 'auto',
+    position: 'relative'
+  },
+  img: {
+    borderRadius: 100,
+    bottom: 0,
+    left: 0,
+    position: 'absolute',
+    width: 36,
+    zIndex: 100,
+  }
+}
 
 export default class ChatFeed extends Component {
 
@@ -19,15 +43,32 @@ export default class ChatFeed extends Component {
 
 componentDidMount = () => {
   socket.on('chat message', (newMessage) => {
-
-    // if BIG JSON obj from server (aka newMEssage) ontains form data
-    // let's pass it up to app.js via this.props.handleFormData.
-
     var messages = this.state.messages;
     messages.push(new Message({id: 1, message: newMessage}));
     this.setState({messages : messages});
   });
+  socket.on('order context', (context) => {
+    var projectInfo = {}
+    if (context) {
+      projectInfo.projectType = context['project-type']
+      projectInfo.progressType = context['progress-type']
+      projectInfo.technologies = context['technologies']
+      projectInfo.deadline = context['deadline.original']
+      projectInfo.budget = context['budget.original']
+      projectInfo.firstName = context['first.original']
+      projectInfo.lastName = context['last.original']
+      projectInfo.company = context['company.original']
+      projectInfo.city = context['geo-city']
+      projectInfo.phoneNumber = context['phone-number.original']
+      projectInfo.email = context['email.original']
+      this.props.handleFormData(projectInfo)
+    }
+  });
 }
+
+// if BIG JSON obj from server (aka newMEssage) ontains form data
+// let's pass it up to app.js via this.props.handleFormData.
+
 
 
   _scrollToBottom = () => {
@@ -40,7 +81,7 @@ componentDidMount = () => {
 
   _renderGroup = (messages, index, id) => {
     var group = []
-    for (var i = index; messages[i]?messages[i].id == id:false; i--) {
+    for (var i = index; messages[i]?messages[i].id === id:false; i--) {
       group.push(messages[i])
     }
     var message_nodes = group.reverse().map((curr, index) => {
@@ -58,13 +99,10 @@ componentDidMount = () => {
   }
 
   _renderMessages = (messages) => {
-    console.log('newMessage', messages);
     var message_nodes = messages.map((curr, index) => {
-
-      // Find diff in message type or no more messages
       if (
         (messages[index+1]?false:true) ||
-        (messages[index+1].id != curr.id)
+        (messages[index+1].id !== curr.id)
       ) {
         return this._renderGroup(messages, index, curr.id);
       }
@@ -112,35 +150,11 @@ componentDidMount = () => {
   }
 }
 
-const styles = {
-  chatPanel: {
-    display: 'flex',
-    flexDirection: 'column',
-    flex: 1
-  },
-  chatHistory: {
-    overflow: 'scroll'
-  },
-  chatbubbleWrapper: {
-    marginTop: 10,
-    marginBottom: 10,
-    overflow: 'auto',
-    position: 'relative'
-  },
-  img: {
-    borderRadius: 100,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-    width: 36,
-    zIndex: 100,
-  }
-}
 
 ChatFeed.propTypes =  {
-  isTyping: React.PropTypes.bool,
-  hasInputField: React.PropTypes.bool,
-  bubblesCentered: React.PropTypes.bool,
-  bubbleStyles: React.PropTypes.object,
-  messages: React.PropTypes.array.isRequired
+  isTyping: PropTypes.bool,
+  hasInputField: PropTypes.bool,
+  bubblesCentered: PropTypes.bool,
+  bubbleStyles: PropTypes.object,
+  messages: PropTypes.array.isRequired
 }

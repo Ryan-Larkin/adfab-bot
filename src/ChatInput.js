@@ -1,17 +1,23 @@
-'use strict';
 import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
-import config from '../config.json'
+
+const styles = {
+  chatInput: {
+    flex: 1
+  },
+  inputStyle: {
+    border: 'none',
+    fontSize: 14,
+    outline: 'none',
+    padding: 30,
+    width: '100%'
+  }
+}
 
 export default class ChatInput extends Component {
-  constructor(props) {
-    super(props)
-  }
+
 
 _handleSubmit = (event) => {
   event.preventDefault();
-  console.log('hello' + this.refs.message.value)
-  console.log(this.props)
   this.props.userMessage(this.refs.message.value)
 }
 
@@ -25,21 +31,5 @@ _handleSubmit = (event) => {
       </form>
       </div>
     )
-  }
-}
-
-const styles = {
-  chatInput: {
-    flex: 1
-  },
-  inputStyle: {
-    border: 'none',
-      // borderTopWidth: '1',
-      // borderTopStyle: 'solid',
-      // borderTopColor: '#ddd',
-    fontSize: '16',
-    outline: 'none',
-    padding: '30',
-    width: '100%'
   }
 }

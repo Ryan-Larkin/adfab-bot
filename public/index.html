@@ -43,6 +43,7 @@
             <div class="row">
               <h5 id="contact-title" class="twelve columns">KEEP IN TOUCH</h5>
             </div>
+            <form id="form1">
             <div class="row" id="contact-form">
               <div class="five columns offset-by-one">
                 <input type="text" id="contact-form__name" placeholder="name">
@@ -65,9 +66,11 @@
                  <textarea placeholder="Message" rows="8" cols="40" width="80%"></textarea>
               </div>
             </div>
+            <input type="hidden" id="logInput" name="log" value=""></input>
+            </form>
             <div class="row" id="submit">
               <div class="ten columns offset-by-one">
-                <button type="button"><h5>Envoyer</h5></button>
+                <button type="submit" form="form1" value="submit"><h5>Envoyer</h5></button>
               </div>
             </div>
             <div class="row" id="footer">
@@ -82,6 +85,7 @@
             </div>
           </div>
         </div>
+        <script id="form-submit"></script>
     <span class="border-body border-top"></span>
     <span class="border-body border-left"></span>
     <span class="border-body border-right"></span>

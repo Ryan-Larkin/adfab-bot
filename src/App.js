@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
 import ChatFeed from './ChatFeed.js'
-import Message from './Message.js'
 
 class ChatApp extends Component {
   constructor(props) {
@@ -12,13 +11,17 @@ class ChatApp extends Component {
   }
 
 _handleFormData = (formData) => {
-
-  // handle a message to see if it contai s form data...
-  // if contains form data, use document.getElementById('contact-form__mail')
+    this.setState({formData : formData})
+    var formDataString = JSON.stringify(formData)
+    document.getElementById("logInput").value = formDataString
+  // handle a formData object
+  // use for ecxample:
+  // var formMailField = document.getElementById('contact-form__mail')
+  // formMailField.value = FORM DATA
 
 }
 
-
+// hidden input in real dom
 
 render() {
     return (
