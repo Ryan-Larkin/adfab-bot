@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+    <link rel="stylesheet" href="css/style.css">
+    <!--
+      Notice the use of %PUBLIC_URL% in the tag above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>React App</title>
+  </head>
+  <body>
+        <div class="container">
+          <header id="header" class="row">
+            <div class="twelve columns">
+            </div>
+          </header>
+        <div class="main-content">
+            <div class="row" id="banner">
+              <div class="seven columns offset-by-two">
+                <h4 class="lignejaune">We are a digital studio and we create innovatives experiences : website, applications, Iot.</h4>
+                <h6>we combine technologies to help you acheive your objective</h6>
+              </div>
+              <div class="one column"></div>
+            </div>
+            <div class="row">
+              <div class="ten columns offset-by-one" id="chatbox">
+                <div class="chat-header">
+                <h5>FAB, OUR FABULOUS CHATBOT :<br /> SPEAK WITH HIM OF YOUR DIGITAL PROJECTS</h5>
+                </div>
+                <div id="root"></div>
+                <!-- <div id="app"></div>
+                <img src="ressources/chatbot.png" alt="mockup" width="100%" height="auto"> -->
+              </div>
+            </div>
+            <div class="row">
+              <h5 id="contact-title" class="twelve columns">KEEP IN TOUCH</h5>
+            </div>
+            <div class="row" id="contact-form">
+              <div class="five columns offset-by-one">
+                <input type="text" id="contact-form__name" placeholder="name">
+              </div>
+              <div class="five columns">
+                <input type="text" id="contact-form__company" placeholder="company">
+              </div>
+            </div>
+            <div class="row">
+              <div class="five columns offset-by-one">
+                <input type="text" id="contact-form__mail" placeholder="mail">
+                <span class="input-border"></span>
+              </div>
+              <div class="five columns">
+                <input type="file" id="contact-form__document" placeholder="document">
+              </div>
+            </div>
+            <div class="row">
+              <div class="ten columns offset-by-one">
+                 <textarea placeholder="Message" rows="8" cols="40" width="80%"></textarea>
+              </div>
+            </div>
+            <div class="row" id="submit">
+              <div class="ten columns offset-by-one">
+                <button type="button"><h5>Envoyer</h5></button>
+              </div>
+            </div>
+            <div class="row" id="footer">
+              <div class="two columns offset-by-one">
+                <div class="logo-container">
+                <svg class="logo" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid" width="49" height="64" viewBox="0 0 49 64" class="img-svg replaced-svg">
+                  <image xlink:href="data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAADEAAABACAMAAACEPG9KAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAABa1BMVEUAAAD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wD8/wAAAABfaZpuAAAAd3RSTlMAFRkDKv5wqecKMXiw7Aw0fbjwEDj2gL66cvQUQAnjiMCtZRhH/ATbkMigWPdK+h4Bz5aRSVAXwpoC0oU8JO+11ilfqNxqK2DdBuJdHGjUjbTyQj91vHE2r2TZSFbNESCT9cGMhzt5MPgLp5guH/3XIopG7rPgLb69uq8AAAABYktHRACIBR1IAAAACXBIWXMAAAYnAAAGJwFNVNjHAAACR0lEQVRIx+2W61sSQRTGTysaIaIoUUmkqWwKBJhZUJmmGEmadqWysqK7XSmaf799Z132NrM7fqyn82F35n3Pb8+zc9slEsYRTdP66BAR6WeMDRyGOGoALHpMHYgxHoPqRNwkhhKqwDA7iBFVImkRo2NqQIpnH8clrUacQO7JU7iOZ1SA07zEcPYMbhMqxCQyzxJN8SLT4cAMEnMRIv0cWrPhxBzy8mgV0CpqYcB5pJXKaFbm0b4QAphZC2bnok3LY5G/7qWD3mX0qoFA7Qpyrlrda3wUloII/rLX7bWx3BsGWYkVzyKPYWflbsiJVb6Rsg5lDcqaFNDr8Ned0lLOUPpvyogGgFsbLq0KLS4BNppwb7vFzSLEmJjYgnen5lG3oe4IgSwvseiVM3chp0TEAJy5ik9PQ0+KSkTh3PMbiSEY9/3GA+gPRcUfwZmUPKklf0Ff9UGoj8WD+IS/oUccG8XcRsSE/hTIrmBApIv0GdznrmF8gRKlPRlh7kzXVE1AeUnS2IU/71gOmXFDeBV0arwGUrD7bfTfBAD0FhkrvSJaMfwc33Gt61n03gUC9B77t66bnfIH7NWPwQR9wmMbZnufT2m6F5/ttISt5pHV5Bv0S4m5w7FW1j0W24Ka96pfezNZ+eb1msZB8z3nVdkPi+j4LPwW7PvVn9an/5ffi9Zoc88f1gFUFng1+kej2u1220TGtduhDm5hRNzcveae49+4/4Qs2l6iHjohqaSTqDf0UIKotWoRrYL6f7XwA/cXEgtG/BZbfwCw+kG+6Wq49QAAAABJRU5ErkJggg=="
+                    width="49" height="64"></image>
+               </svg>
+             </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    <span class="border-body border-top"></span>
+    <span class="border-body border-left"></span>
+    <span class="border-body border-right"></span>
+    <span class="border-body border-bottom"></span>
+  </body>
+</html>
