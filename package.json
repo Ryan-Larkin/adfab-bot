@@ -16,11 +16,14 @@
     "superagent": "^3.5.2"
   },
   "devDependencies": {
+    "npm-run-all": "^4.0.2",
     "react-scripts": "0.9.5"
   },
   "scripts": {
     "start": "react-scripts start & node server.js",
-    "dev": "react-scripts start & PORT=3001 nodemon server.js",
+    "dev": "npm-run-all --parallel --print-label dev:react dev:server",
+    "dev:react": "react-scripts start",
+    "dev:server": "PORT=3001 nodemon server.js",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

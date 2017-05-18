@@ -176,7 +176,7 @@ componentDidMount = () => {
     return (
       <div id="chat-panel" style={styles.chatPanel}>
         <div ref="chat" className="chat-history" style={styles.chatHistory}>
-          <div className="chat-messages" >
+          <div className="chat-messages">
             {this._renderMessages(this.state.messages)}
           </div>
         </div>

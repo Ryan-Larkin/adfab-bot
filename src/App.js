@@ -32,8 +32,8 @@ render() {
           hasInputField={true}
           bubblesCentered={false}
           bubbleStyles={{
-            text: {fontSize: 15},
-            chatbubble: {borderRadius: 70,padding: 25}
+            text: {fontSize: 20},
+            chatbubble: {borderRadius: 10,padding: 25}
           }}
         />
       </div>

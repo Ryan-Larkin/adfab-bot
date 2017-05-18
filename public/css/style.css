@@ -460,10 +460,10 @@ textarea {
 }
 
 .ChatApp {
-  
+
 }
 
 .chat-history {
-   height: 300px;
+   height: 400px;
    overflow: hidden;
 }

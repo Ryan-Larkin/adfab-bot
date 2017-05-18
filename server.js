@@ -28,6 +28,7 @@ const transporter = nodemailer.createTransport({
 });
 
 app.post('/sendmail', function(req, res) {
+  console.log(req.body)
   let botConvoEmail = {
       from: '"Ryan" <ryan.r.larkin@gmail.com>',
       to: 'ryan.r.larkin@gmail.com',
@@ -85,6 +86,7 @@ io.on('connection', function(socket){
         .then(response => {
           response.body.result.contexts.forEach(context => {
             // check for the order context which means an order is in the process of being made
+            console.log(context.parameters)
             if (context.name === 'order') {
               // make sure parameters are created
               if (context.parameters) {
@@ -96,7 +98,7 @@ io.on('connection', function(socket){
                 // if tech has not been checked yet, then check it
                 if (!isTechChecked) {
                   // Check if the technologies parameter is present in the context
-                  if (context.parameters.technologies.length) {
+                  if (context.parameters.technologies && context.parameters.technologies.length) {
 
                     /*
                     .map on the user-entered contexts
