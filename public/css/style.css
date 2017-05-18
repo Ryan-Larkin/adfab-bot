@@ -334,6 +334,7 @@ form {
   float: left; }
 
 
+
 /* Misc
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 hr {
@@ -448,4 +449,21 @@ header {
       border-top: 3px solid #fcff00;
   }
 
+}
+
+input[type="text"] {
+  font-size: 24px;
+}
+
+textarea {
+  font-size: 24px;
+}
+
+.ChatApp {
+  
+}
+
+.chat-history {
+   height: 300px;
+   overflow: hidden;
 }

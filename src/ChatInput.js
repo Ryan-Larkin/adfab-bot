@@ -19,6 +19,7 @@ export default class ChatInput extends Component {
 _handleSubmit = (event) => {
   event.preventDefault();
   this.props.userMessage(this.refs.message.value)
+  this.refs.message.value = ""
 }
 
 

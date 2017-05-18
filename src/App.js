@@ -14,14 +14,13 @@ _handleFormData = (formData) => {
     this.setState({formData : formData})
     var formDataString = JSON.stringify(formData)
     document.getElementById("logInput").value = formDataString
-  // handle a formData object
-  // use for ecxample:
-  // var formMailField = document.getElementById('contact-form__mail')
-  // formMailField.value = FORM DATA
-
+    document.getElementById('contact-form__name').value = `${
+      formData.firstName !== undefined && formData.lastName !== undefined ?
+      formData.firstName + ' ' + formData.lastName : 'name'}`
+      document.getElementById('contact-form__company').value = `${formData.company !== undefined ? formData.company : 'company'}`
+      document.getElementById('contact-form__mail').value = `${formData.email !== undefined ? formData.email : 'email'}`
 }
 
-// hidden input in real dom
 
 render() {
     return (
@@ -34,7 +33,7 @@ render() {
           bubblesCentered={false}
           bubbleStyles={{
             text: {fontSize: 15},
-            chatbubble: {borderRadius: 70,padding: 20}
+            chatbubble: {borderRadius: 70,padding: 25}
           }}
         />
       </div>

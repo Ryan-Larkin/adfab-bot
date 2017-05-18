@@ -6,14 +6,27 @@ import ChatBubble from './ChatBubble.js'
 import ChatInput from './ChatInput.js'
 import Message from './Message.js'
 import config from '../config.json'
+import marked from 'marked'
 const io = require('socket.io-client')
 const socket = io(config.domain)
+
+marked.setOptions({
+  renderer: new marked.Renderer(),
+  gfm: true,
+  tables: true,
+  breaks: true,
+  pedantic: false,
+  sanitize: true,
+  smartLists: true,
+  smartypants: false
+});
+
 
 const styles = {
   chatPanel: {
     display: 'flex',
     flexDirection: 'column',
-    flex: 1
+    flex: 1,
   },
   chatHistory: {
     overflow: 'scroll'
@@ -21,6 +34,8 @@ const styles = {
   chatbubbleWrapper: {
     marginTop: 10,
     marginBottom: 10,
+    marginLeft: 20,
+    marginRight: 20,
     overflow: 'auto',
     position: 'relative'
   },
@@ -42,6 +57,13 @@ export default class ChatFeed extends Component {
   }
 
 componentDidMount = () => {
+
+  socket.on('budget error', (msg) => {
+      var messages = this.state.messages;
+      messages.push(new Message({id: 1, message: msg}));
+      this.setState({messages : messages});
+    })
+
   socket.on('chat message', (newMessage) => {
     var messages = this.state.messages;
     messages.push(new Message({id: 1, message: newMessage}));
@@ -56,7 +78,7 @@ componentDidMount = () => {
       projectInfo.deadline = context['deadline.original']
       projectInfo.budget = context['budget.original']
       projectInfo.firstName = context['first.original']
-      projectInfo.lastName = context['last.original']
+      projectInfo.lastName = context['lastname.original']
       projectInfo.company = context['company.original']
       projectInfo.city = context['geo-city']
       projectInfo.phoneNumber = context['phone-number.original']
@@ -135,7 +157,7 @@ componentDidMount = () => {
       this._scrollToBottom()
     },10)
 
-    var inputField = this.props.hasInputField ? <ChatInput userMessage={this._handleMessage}></ChatInput> : null
+    var inputField = this.props.hasInputField ? <ChatInput userMessage={this._handleMessage} ></ChatInput> : null
 
     return (
       <div id="chat-panel" style={styles.chatPanel}>

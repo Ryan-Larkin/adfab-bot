@@ -1,4 +1,17 @@
 import React, { Component } from 'react'
+import marked from 'marked'
+
+marked.setOptions({
+  renderer: new marked.Renderer(),
+  gfm: true,
+  tables: true,
+  breaks: true,
+  pedantic: false,
+  sanitize: true,
+  smartLists: true,
+  smartypants: false
+})
+
 
 const styles = {
   chatbubble: {
@@ -50,31 +63,10 @@ export default class ChatBubble extends Component {
 
   componentDidMount() {}
 
-  // IPR
-  _parse_for_styles(message) {
-    if (typeof(message) === "string") {
-      var bolded_start = message.search(/__(\w+\s?)+__/);
-      var bolded_end = message.slice(bolded_start+2).search(/__/)
-      var bolded = message.slice(bolded_start + 2, bolded_start + bolded_end + 2)
-      // Render text
-      if (bolded_start !== -1 && bolded_end !== -1) {
-        return (
-          <span>
-            {this._parse_for_styles(message.slice(0, bolded_start))}
-            <strong>{bolded}</strong>
-            {this._parse_for_styles(message.slice(bolded_start + bolded_end + 4))}
-          </span>
-        )
-      }
-      else {
-        return <span>{message}</span>
-      }
-    }
-    return message
-  }
 
   render() {
     if (this.props.message.id) {
+        var message = this.props.message.message
         return (
           <div style={Object.assign({},
             styles.chatbubble,
@@ -82,7 +74,7 @@ export default class ChatBubble extends Component {
             (this.props.bubblesCentered?{}:styles.recipientChatbubbleOrientationNormal),
             this.state.bubbleStyles.chatbubble
           )}>
-            <p style={Object.assign({},styles.p, this.state.bubbleStyles.text)}>{this.props.message.message}</p>
+            <p style={Object.assign({},styles.p, this.state.bubbleStyles.text)} dangerouslySetInnerHTML={{__html: message}}></p>
           </div>
         )
     } else {
