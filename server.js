@@ -91,66 +91,52 @@ io.on('connection', function(socket){
                 // always send the context to the front end
                 socket.emit('order context', context.parameters);
 
-
-
                 // if tech has not been checked yet, then check it
                 if (!isTechChecked) {
                   // Check if the technologies parameter is present in the context
-                  if (context.parameters.technologies.length) {
-
-                    /*
-                    .map on the user-entered contexts
-                    create a new array of objects with tech name and true/false from the result of the some functions
-
-                    if all in not used, return not used message
-                    else if at least 1 in not used, return mix message
-                    else return normal bot message
-                    */
-
-                    // for each tech entered by the user, check if it's in the list of technologies not used by AdFab
-                    context.parameters.technologies.forEach(techEntered => {
-                      if (TECHNOLOGIES_NOT_USED.some(techNotUsed => techNotUsed.test(techEntered))) {
-                        socket.emit('tech not used', 'We apologize but we cannot use that technology. If you are flexible on this, please fill out the form below and we\'ll contact you as soon as we can to discuss other options.');
-                        botTalks = false;
-                      }
-                      else if (!TECHNOLOGIES_USED.some(techUsed => techUsed.test(techEntered))) {
-                        socket.emit('tech unsure', 'We\'re not sure if we can use this technology, fill out the form below and we\'ll get back to you as soon as we can, so we can discuss other options.');
-                        botTalks = false;
-                      }
-                      else {
-                        socket.emit('chat message', response.body.result.fulfillment.speech);
-                      }
-                    });
+                  if (context.parameters.technologies && context.parameters.technologies.length) {
                     isTechChecked = true;
-                  }
-                  else {
-                    socket.emit('chat message', response.body.result.fulfillment.speech);
+                    if (context.parameters.technologies.every(techEntered => TECHNOLOGIES_USED.some(techUsed => techUsed.test(techEntered)))) {
+                      socket.emit('chat message', response.body.result.fulfillment.speech);
+                      return;
+                    }
+                    // if one is good and one is bad, this will be false and output the unsure message instead
+                    // ask later if there's a way of fixing it
+                    // this also works anyways so we can say it's working as intended
+                    else if (context.parameters.technologies.every(techEntered => TECHNOLOGIES_NOT_USED.some(techNotUsed => techNotUsed.test(techEntered)))) {
+                      socket.emit('tech not used', 'We apologize but we cannot use that technology. If you are flexible on this,' +
+                                                   ' please fill out the form below and we\'ll contact you as soon as we can to discuss ' +
+                                                   'other options.');
+                      botTalks = false;
+                      return;
+                    }
+                    else {
+                      socket.emit('tech unsure', 'We\'re not sure if we can use this technology, fill out the form below and we\'ll get back' +
+                                                 ' to you as soon as we can, so we can discuss other options.');
+                      botTalks = false;
+                      return;
+                    }
                   }
                 }
 
                 // if budget has not been checked yet, then check it
                 else if (!isBudgetChecked) {
                   // check if the budget parameter is present in the context
-                  if (context.parameters.budget) {
+                  if (context.parameters.budget && context.parameters.technologies.length) {
                     // if budget parameter is set, check it against the $1000 restriction
+                    isBudgetChecked = true;
                     if (Number(context.parameters.budget.amount) < 1000) {
                       // if budget doesn't fit the restriction, output an error message and stop the bot from talking anymore
-                      socket.emit('budget error', 'We\'re very sorry but unfortunately we cannot take projects with a budget under $1000. If you are flexible on this amount, please fill out the form below and we will get in touch as soon as we can.');
+                      socket.emit('budget error', 'We\'re very sorry but unfortunately we cannot take projects with a budget under $1000. ' +
+                                                  'If you are flexible on this amount, please fill out the form below and we will get in touch ' +
+                                                  'as soon as we can.');
                       botTalks = false;
                       return;
                     }
-                    else {
-                      socket.emit('chat message', response.body.result.fulfillment.speech);
-                    }
-                    isBudgetChecked = true;
-                  }
-                  else {
-                    socket.emit('chat message', response.body.result.fulfillment.speech);
                   }
                 }
-                else {
-                  socket.emit('chat message', response.body.result.fulfillment.speech);
-                }
+
+                socket.emit('chat message', response.body.result.fulfillment.speech);
               }
             }
           });
