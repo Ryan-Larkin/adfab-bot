@@ -8,13 +8,19 @@
     "react-chat-ui": "0.0.28",
     "react-dom": "^15.5.4",
     "react-marked": "^0.3.1",
-    "socket.io-client": "^2.0.1"
+    "socket.io-client": "^2.0.1",
+    "apiai": "^4.0.2",
+    "express": "^4.15.2",
+    "nodemailer": "^4.0.1",
+    "socket.io": "^2.0.1",
+    "superagent": "^3.5.2"
   },
   "devDependencies": {
     "react-scripts": "0.9.5"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts start & node server.js",
+    "dev": "react-scripts start & PORT=3001 nodemon server.js",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

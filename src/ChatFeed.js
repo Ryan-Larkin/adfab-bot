@@ -59,16 +59,30 @@ export default class ChatFeed extends Component {
 componentDidMount = () => {
 
   socket.on('budget error', (msg) => {
-      var messages = this.state.messages;
-      messages.push(new Message({id: 1, message: msg}));
-      this.setState({messages : messages});
-    })
+    var messages = this.state.messages;
+    messages.push(new Message({id: 1, message: msg}));
+    this.setState({messages : messages});
+  });
+
+  socket.on('tech not used', (newMessage) => {
+    var messages = this.state.messages;
+    messages.push(new Message({id: 1, message: newMessage}));
+    this.setState({messages : messages});
+  });
+
+  socket.on('tech unsure', (newMessage) => {
+    var messages = this.state.messages;
+    messages.push(new Message({id: 1, message: newMessage}));
+    this.setState({messages : messages});
+  });
 
   socket.on('chat message', (newMessage) => {
     var messages = this.state.messages;
     messages.push(new Message({id: 1, message: newMessage}));
     this.setState({messages : messages});
   });
+
+
   socket.on('order context', (context) => {
     var projectInfo = {}
     if (context) {
