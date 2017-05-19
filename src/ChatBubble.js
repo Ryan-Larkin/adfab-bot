@@ -1,17 +1,4 @@
 import React, { Component } from 'react'
-import marked from 'marked'
-
-marked.setOptions({
-  renderer: new marked.Renderer(),
-  gfm: true,
-  tables: true,
-  breaks: true,
-  pedantic: false,
-  sanitize: true,
-  smartLists: true,
-  smartypants: false
-})
-
 
 const styles = {
   chatbubble: {
@@ -22,12 +9,13 @@ const styles = {
     marginRight: 'auto',
     marginBottom: 1,
     marginLeft: 'auto',
-    maxWidth: 425,
-    paddingTop: 8,
-    paddingBottom: 8,
-    paddingLeft: 14,
-    paddingRight: 14,
-    width: '-webkit-fit-content'
+    maxWidth: '70%',
+    paddingTop: 2,
+    paddingBottom: 2,
+    paddingLeft: 10,
+    paddingRight: 10,
+    width: '-webkit-fit-content',
+    display: 'flex',
   },
   chatbubbleOrientationNormal: {
     float: 'right'
@@ -40,9 +28,9 @@ const styles = {
   },
   p: {
     color: 'black',
-    fontSize: 16,
-    fontWeight: '300',
+    fontSize: 20,
     margin: 0,
+    lineHeight : 1.2
   }
 }
 
@@ -61,8 +49,6 @@ export default class ChatBubble extends Component {
     }
   }
 
-  componentDidMount() {}
-
 
   render() {
     if (this.props.message.id) {
@@ -74,6 +60,7 @@ export default class ChatBubble extends Component {
             (this.props.bubblesCentered?{}:styles.recipientChatbubbleOrientationNormal),
             this.state.bubbleStyles.chatbubble
           )}>
+          {/* <img src="http://connect.adfab.fr/wp-content/uploads/2015/07/logo_adfab.png" height="50px" weight="50px"/> */}
             <p style={Object.assign({},styles.p, this.state.bubbleStyles.text)} dangerouslySetInnerHTML={{__html: message}}></p>
           </div>
         )

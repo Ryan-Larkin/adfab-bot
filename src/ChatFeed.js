@@ -27,7 +27,8 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
-  },
+    background: 'rgb(250, 250, 250)'
+    },
   chatHistory: {
     overflow: 'scroll'
   },
