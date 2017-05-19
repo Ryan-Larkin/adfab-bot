@@ -2,14 +2,17 @@ import React, { Component } from 'react'
 
 const styles = {
   chatInput: {
-    flex: 1
+    flex: 1,
+    background: 'rgb(250, 250, 250)'
   },
   inputStyle: {
     border: 'none',
-    fontSize: 14,
+    margin: 0,
+    fontSize: 24,
+    fontWeight: 'bold',
     outline: 'none',
-    padding: 8,
-    width: '100%'
+    width: '100%',
+    background: 'rgb(250, 250, 250)'
   }
 }
 

@@ -455,12 +455,25 @@ input[type="text"] {
   font-size: 24px;
 }
 
+input:focus {
+    outline:none;
+}
+
+textarea:focus {
+    outline:none;
+}
+
 textarea {
   font-size: 24px;
 }
 
-.ChatApp {
+#logo {
+  align-self: center;
+  margin-right: 2%;
+}
 
+.chat-input {
+border-top: 3px solid black;
 }
 
 .chat-history {

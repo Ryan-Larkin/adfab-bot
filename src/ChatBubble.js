@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 const styles = {
   chatbubble: {
-    backgroundColor: "#fcff00",
+    background: "linear-gradient(to left, #fcff00, #fdff99)",
     borderRadius: 20,
     clear: 'both',
     marginTop: 1,
@@ -16,21 +16,28 @@ const styles = {
     paddingRight: 10,
     width: '-webkit-fit-content',
     display: 'flex',
-  },
+    fontWeight: '600',
+    boxShadow: '-1px 1px 1px #4B4C00'
+    },
   chatbubbleOrientationNormal: {
     float: 'right'
   },
   recipientChatbubble : {
-    backgroundColor: '#ccc'
+    background: 'linear-gradient(to right, #e4e4e4, #CDCDCD)',
+    boxShadow: '2px 2px 2px grey'
   },
   recipientChatbubbleOrientationNormal: {
     float: 'left'
   },
   p: {
     color: 'black',
-    fontSize: 20,
+    fontSize: 24,
     margin: 0,
     lineHeight : 1.2
+  },
+  img: {
+    justifyContent: 'center',
+    alignSelf: 'center',
   }
 }
 
@@ -54,15 +61,15 @@ export default class ChatBubble extends Component {
     if (this.props.message.id) {
         var message = this.props.message.message
         return (
-          <div style={Object.assign({},
-            styles.chatbubble,
-            styles.recipientChatbubble,
-            (this.props.bubblesCentered?{}:styles.recipientChatbubbleOrientationNormal),
-            this.state.bubbleStyles.chatbubble
-          )}>
-          {/* <img src="http://connect.adfab.fr/wp-content/uploads/2015/07/logo_adfab.png" height="50px" weight="50px"/> */}
-            <p style={Object.assign({},styles.p, this.state.bubbleStyles.text)} dangerouslySetInnerHTML={{__html: message}}></p>
-          </div>
+            <div style={Object.assign({},
+              styles.chatbubble,
+              styles.recipientChatbubble,
+              (this.props.bubblesCentered?{}:styles.recipientChatbubbleOrientationNormal),
+              this.state.bubbleStyles.chatbubble
+            )}>
+            <img src="http://connect.adfab.fr/wp-content/uploads/2015/07/logo_adfab.png" id="logo" height="40px" weight="40px"/>
+              <p style={Object.assign({},styles.p, this.state.bubbleStyles.text)} dangerouslySetInnerHTML={{__html: message}}></p>
+            </div>
         )
     } else {
       return (
