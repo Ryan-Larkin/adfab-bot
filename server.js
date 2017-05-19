@@ -5,7 +5,11 @@ const io = require('socket.io')(http);
 const apiai = require('apiai')('2849dfafec2a4452a8c5c4a15813b072');
 const superagent = require('superagent');
 const nodemailer = require('nodemailer');
+const bodyParser = require('body-parser')
 
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 // my bot key: 2849dfafec2a4452a8c5c4a15813b072
 // zach's bot key: 59b95837db154de18eb3f00d765e7b24
 const API_CLIENT_KEY = '59b95837db154de18eb3f00d765e7b24';
@@ -28,14 +32,31 @@ const transporter = nodemailer.createTransport({
 });
 
 app.post('/sendmail', function(req, res) {
-  console.log(req.body)
+ let log = JSON.parse(req.body.log)
+  console.log(log)
+  console.log(log.progressType)
   let botConvoEmail = {
       from: '"Ryan" <ryan.r.larkin@gmail.com>',
-      to: 'ryan.r.larkin@gmail.com',
+      to: 'g.bibeaulaviolette@gmail.com',
       subject: 'Test Form Submit',
       text: 'Hello world',
-      html: '<b>Hello world</b>' // do we want an html body?
+      html: `
+        <5>Fab has a new lead for you<5>
+         <ul>
+           <li>Last Name : ${log.lastName}</li>
+           <li>Phone Number : ${log.phoneNumber}</li>
+           <li>email : ${log.email}</li>
+           <li>Company : ${log.company}</li>
+           <li>City : ${log.city}</li>
+           <li>Project Type : ${log.projectType}</li>
+           <li>State of the project : ${log.progressType}</li>
+           <li>Budget : ${log.budget}</li>
+           <li>technologies : ${log.technologies}</li>
+           <li>deadline : ${log.deadline}</li>
+         </ul>`
+
   };
+
 
   res.sendStatus(200);
   transporter.sendMail(botConvoEmail, (error, info) => {
@@ -86,7 +107,6 @@ io.on('connection', function(socket){
         .then(response => {
           response.body.result.contexts.forEach(context => {
             // check for the order context which means an order is in the process of being made
-            console.log(context.parameters)
             if (context.name === 'order') {
               // make sure parameters are created
               if (context.parameters) {

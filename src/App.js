@@ -14,6 +14,8 @@ _handleFormData = (formData) => {
     this.setState({formData : formData})
     var formDataString = JSON.stringify(formData)
     document.getElementById("logInput").value = formDataString
+    console.log(document.getElementById("logInput").value)
+    // I can properly assign the data to the input field. tested and working
     document.getElementById('contact-form__name').value = `${
       formData.firstName !== undefined && formData.lastName !== undefined ?
       formData.firstName + ' ' + formData.lastName : 'name'}`
