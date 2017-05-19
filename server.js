@@ -123,7 +123,7 @@ io.on('connection', function(socket){
                     if (context.parameters.technologies.every(techEntered => TECHNOLOGIES_USED.some(techUsed => techUsed.test(techEntered)))) {
                       setTimeout(function() {
                         socket.emit('chat message', response.body.result.fulfillment.speech);
-                      }, (Math.floor(Math.random() * 2) + 1) * 1000);
+                      }, (Math.floor(Math.random() * 1) + 1) * 1000);
                       return;
                     }
                     // If one is good and one is bad, this will be false and output the unsure message instead
@@ -134,7 +134,7 @@ io.on('connection', function(socket){
                         socket.emit('tech not used', 'We apologize but we cannot use certain technology. If you are flexible on this,' +
                                                      ' please fill out the form below and we\'ll contact you as soon as we can to discuss ' +
                                                      'other options!');
-                      }, (Math.floor(Math.random() * 2) + 1) * 1000);
+                      }, (Math.floor(Math.random() * 1) + 1) * 1000);
                       botTalks = false;
                       return;
                     }
@@ -142,7 +142,7 @@ io.on('connection', function(socket){
                       setTimeout(function() {
                         socket.emit('tech unsure', 'We\'re not sure if we can use some of this technology, fill out the form below and we\'ll get back' +
                                                    ' to you as soon as we can, so we can discuss other options. We look forward to hearing from you!');
-                      }, (Math.floor(Math.random() * 2) + 1) * 1000);
+                      }, (Math.floor(Math.random() * 1) + 1) * 1000);
                       botTalks = false;
                       return;
                     }
@@ -167,7 +167,7 @@ io.on('connection', function(socket){
                           socket.emit('budget error', 'We\'re very sorry but unfortunately we cannot take projects with a budget under $1000. ' +
                                                       'If you are flexible on this amount, please fill out the form below and we will get in touch ' +
                                                       'as soon as we can.');
-                        }, (Math.floor(Math.random() * 2) + 1) * 1000);
+                        }, (Math.floor(Math.random() * 1) + 1) * 1000);
                         botTalks = false;
                         return;
                       }
@@ -177,7 +177,7 @@ io.on('connection', function(socket){
 
                 setTimeout(function() {
                   socket.emit('chat message', response.body.result.fulfillment.speech);
-                }, (Math.floor(Math.random() * 2) + 1) * 1000);
+                }, (Math.floor(Math.random() * 1) + 1) * 1000);
               }
             }
           });
@@ -192,5 +192,5 @@ io.on('connection', function(socket){
 
 
 http.listen(process.env.PORT || 3000, function(){
-  console.log('listening on *:3000');
+  console.log(`listening on *:${process.env.PORT}`);
 });
