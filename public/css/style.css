@@ -458,7 +458,10 @@ input[type="text"] {
 input:focus {
     outline:none;
 }
-
+.chat-text {
+  padding-top: 3px;
+  padding-left: 1%
+}
 textarea:focus {
     outline:none;
 }

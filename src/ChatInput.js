@@ -8,6 +8,7 @@ const styles = {
   inputStyle: {
     border: 'none',
     margin: 0,
+
     fontSize: 24,
     fontWeight: 'bold',
     outline: 'none',
@@ -30,7 +31,7 @@ _handleSubmit = (event) => {
     return (
       <div className="chat-input" style={styles.chatInput}>
         <form onSubmit={this._handleSubmit}>
-        <input ref="message" type="text" style={this.props.inputStyles || styles.inputStyle} placeholder={this.props.inputPlaceholder || 'CHAT WITH US'}></input>
+        <input className="chat-text" ref="message" type="text" style={this.props.inputStyles || styles.inputStyle} placeholder={this.props.inputPlaceholder || 'CHAT WITH US'}></input>
       </form>
       </div>
     )
