@@ -14,9 +14,9 @@ app.use(bodyParser.urlencoded({
 // zach's bot key: 59b95837db154de18eb3f00d765e7b24
 const API_CLIENT_KEY = '59b95837db154de18eb3f00d765e7b24';
 
-const TECHNOLOGIES_USED = [/angular/i, /react.?js/i, /react/i, /react.?native/i, /swift/i, /objective.?c/i, /java.?script/i, /word.?press/i, /woo.?commerce/i,
+const TECHNOLOGIES_USED = [/angular/i, /angular.?js/i, /react.?js/i, /react/i, /react.?native/i, /swift/i, /objective.?c/i, /java.?script/i, /word.?press/i, /woo.?commerce/i,
 /prestashop/i, /magento/i, /abe/i, /html/i, /css/i, /java/i, /android/i, /apache.?cordova/i, /node.?js/i, /node/i, /php/i, /symfony/i,
-/zend/i, /laravel/i, /drupal/i, /meteor/i, /express/i, /jquery/i, /unity/i, /vr/i, /virtual.?reality/i, /augmented.?reality/i,
+/zend/i, /laravel/i, /drupal/i, /meteor/i, /express/i, /j.?query/i, /unity/i, /vr/i, /virtual.?reality/i, /augmented.?reality/i,
 /phone.?gap/i];
 
 const TECHNOLOGIES_NOT_USED = [/shopify/i, /c.?sharp/i, /visual.?basic/i, /cobol/i, /ruby/i];
@@ -72,6 +72,7 @@ io.on('connection', function(socket){
   let sessionId = socket.id
 
   // On user connect, output the welcome message to start off the conversation
+  // using a custom welcome event made in API.ai
   superagent
   .post(`https://api.api.ai/v1/query?v=${version}`)
   .set('Content-Type', 'application/json; charset=utf-8')
@@ -117,72 +118,66 @@ io.on('connection', function(socket){
                 if (!isTechChecked) {
                   // Check if the technologies parameter is present in the context
                   if (context.parameters.technologies && context.parameters.technologies.length) {
-                    /*
-                    .map on the user-entered contexts
-                    create a new array of objects with tech name and true/false from the result of the some functions
-
-                    if all in not used, return not used message
-                    else if at least 1 in not used, return mix message
-                    else return normal bot message
-                    */
-
-                    // for each tech entered by the user, check if it's in the list of technologies not used by AdFab
-                    context.parameters.technologies.forEach(techEntered => {
-                      if (TECHNOLOGIES_NOT_USED.some(techNotUsed => techNotUsed.test(techEntered))) {
-                        socket.emit('tech not used', 'We apologize but we cannot use that technology. If you are flexible on this, please fill out the form below and we\'ll contact you as soon as we can to discuss other options.');
-                        botTalks = false;
-                      }
-                      else if (!TECHNOLOGIES_USED.some(techUsed => techUsed.test(techEntered))) {
-                        socket.emit('tech unsure', 'We\'re not sure if we can use this technology, fill out the form below and we\'ll get back to you as soon as we can, so we can discuss other options.');
-                        botTalks = false;
-                      }
-                      else {
-                        socket.emit('chat message', response.body.result.fulfillment.speech);
-                      }
-                    });
                     isTechChecked = true;
+
                     if (context.parameters.technologies.every(techEntered => TECHNOLOGIES_USED.some(techUsed => techUsed.test(techEntered)))) {
-                      socket.emit('chat message', response.body.result.fulfillment.speech);
+                      setTimeout(function() {
+                        socket.emit('chat message', response.body.result.fulfillment.speech);
+                      }, (Math.floor(Math.random() * 2) + 1) * 1000);
                       return;
                     }
-                    // if one is good and one is bad, this will be false and output the unsure message instead
+                    // If one is good and one is bad, this will be false and output the unsure message instead
                     // ask later if there's a way of fixing it
                     // this also works anyways so we can say it's working as intended
                     else if (context.parameters.technologies.every(techEntered => TECHNOLOGIES_NOT_USED.some(techNotUsed => techNotUsed.test(techEntered)))) {
-                      socket.emit('tech not used', 'We apologize but we cannot use that technology. If you are flexible on this,' +
-                                                   ' please fill out the form below and we\'ll contact you as soon as we can to discuss ' +
-                                                   'other options.');
+                      setTimeout(function() {
+                        socket.emit('tech not used', 'We apologize but we cannot use certain technology. If you are flexible on this,' +
+                                                     ' please fill out the form below and we\'ll contact you as soon as we can to discuss ' +
+                                                     'other options!');
+                      }, (Math.floor(Math.random() * 2) + 1) * 1000);
                       botTalks = false;
                       return;
                     }
                     else {
-                      socket.emit('tech unsure', 'We\'re not sure if we can use this technology, fill out the form below and we\'ll get back' +
-                                                 ' to you as soon as we can, so we can discuss other options.');
+                      setTimeout(function() {
+                        socket.emit('tech unsure', 'We\'re not sure if we can use some of this technology, fill out the form below and we\'ll get back' +
+                                                   ' to you as soon as we can, so we can discuss other options. We look forward to hearing from you!');
+                      }, (Math.floor(Math.random() * 2) + 1) * 1000);
                       botTalks = false;
                       return;
                     }
                   }
                 }
+                // All these checks are required as the budget parameter
+                // is created once the intent begins, but does not have a value
+                // set until it gets to that prompt in the conversation
 
                 // if budget has not been checked yet, then check it
-                else if (!isBudgetChecked) {
+                if (!isBudgetChecked) {
                   // check if the budget parameter is present in the context
-                  if (context.parameters.budget && context.parameters.technologies.length) {
-                    // if budget parameter is set, check it against the $1000 restriction
-                    isBudgetChecked = true;
-                    console.log(context.parameters.budget);
-                    if (Number(context.parameters.budget.amount) < 1000) {
-                      // if budget doesn't fit the restriction, output an error message and stop the bot from talking anymore
-                      socket.emit('budget error', 'We\'re very sorry but unfortunately we cannot take projects with a budget under $1000. ' +
-                                                  'If you are flexible on this amount, please fill out the form below and we will get in touch ' +
-                                                  'as soon as we can.');
-                      botTalks = false;
-                      return;
+                  if (context.parameters.budget) {
+
+                    // check if a value has been entered
+                    if (context.parameters.budget[0]) {
+                      isBudgetChecked = true;
+                      // if budget parameter is set, check it against the $1000 restriction
+                      if (Number(context.parameters.budget[0].amount) < 1000) {
+                        // if budget doesn't fit the restriction, output an error message and stop the bot from talking anymore
+                        setTimeout(function() {
+                          socket.emit('budget error', 'We\'re very sorry but unfortunately we cannot take projects with a budget under $1000. ' +
+                                                      'If you are flexible on this amount, please fill out the form below and we will get in touch ' +
+                                                      'as soon as we can.');
+                        }, (Math.floor(Math.random() * 2) + 1) * 1000);
+                        botTalks = false;
+                        return;
+                      }
                     }
                   }
                 }
 
-                socket.emit('chat message', response.body.result.fulfillment.speech);
+                setTimeout(function() {
+                  socket.emit('chat message', response.body.result.fulfillment.speech);
+                }, (Math.floor(Math.random() * 2) + 1) * 1000);
               }
             }
           });
