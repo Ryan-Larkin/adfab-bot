@@ -125,6 +125,7 @@ io.on('connection', function(socket){
                   if (context.parameters.budget && context.parameters.technologies.length) {
                     // if budget parameter is set, check it against the $1000 restriction
                     isBudgetChecked = true;
+                    console.log(context.parameters.budget);
                     if (Number(context.parameters.budget.amount) < 1000) {
                       // if budget doesn't fit the restriction, output an error message and stop the bot from talking anymore
                       socket.emit('budget error', 'We\'re very sorry but unfortunately we cannot take projects with a budget under $1000. ' +
