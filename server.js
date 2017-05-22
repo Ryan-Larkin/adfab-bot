@@ -31,6 +31,10 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+app.get('/hello', function(req, res) {
+   res.end("Hello World"); 
+});
+
 app.post('/sendmail', function(req, res) {
  let log = JSON.parse(req.body.log)
   console.log(log)
