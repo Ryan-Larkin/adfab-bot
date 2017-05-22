@@ -98,93 +98,88 @@ io.on('connection', function(socket){
 
   socket.on('chat message', (msg) => {
     if (botTalks) {
-      superagent
-      .post(`https://api.api.ai/v1/query?v=${version}`)
-      .set('Content-Type', 'application/json; charset=utf-8')
-      .set('Authorization', `Bearer ${API_CLIENT_KEY}`)
-      .send({query: msg})
-      .send({lang: 'en'})
-      .send({sessionId: sessionId})
-        .then(response => {
-          response.body.result.contexts.forEach(context => {
-            // check for the order context which means an order is in the process of being made
-            if (context.name === 'order') {
-              // make sure parameters are created
-              if (context.parameters) {
-                // always send the context to the front end
-                socket.emit('order context', context.parameters);
+      setTimeout(function() {
+        superagent
+        .post(`https://api.api.ai/v1/query?v=${version}`)
+        .set('Content-Type', 'application/json; charset=utf-8')
+        .set('Authorization', `Bearer ${API_CLIENT_KEY}`)
+        .send({query: msg})
+        .send({lang: 'en'})
+        .send({sessionId: sessionId})
+          .then(response => {
+            var orderContext = response.body.result.contexts.filter(function() {
+              return response.body.result.contexts.name === 'order';
+            });
+            
+            response.body.result.contexts.forEach(context => {
+              // check for the order context which means an order is in the process of being made
+              if (context.name === 'order') {
+                // make sure parameters are created
+                if (context.parameters) {
+                  // always send the context to the front end
+                  socket.emit('order context', context.parameters);
 
-                // if tech has not been checked yet, then check it
-                if (!isTechChecked) {
-                  // Check if the technologies parameter is present in the context
-                  if (context.parameters.technologies && context.parameters.technologies.length) {
-                    isTechChecked = true;
+                  // if tech has not been checked yet, then check it
+                  if (!isTechChecked) {
+                    // Check if the technologies parameter is present in the context
+                    if (context.parameters.technologies && context.parameters.technologies.length) {
+                      isTechChecked = true;
 
-                    if (context.parameters.technologies.every(techEntered => TECHNOLOGIES_USED.some(techUsed => techUsed.test(techEntered)))) {
-                      setTimeout(function() {
+                      if (context.parameters.technologies.every(techEntered => TECHNOLOGIES_USED.some(techUsed => techUsed.test(techEntered)))) {
                         socket.emit('chat message', response.body.result.fulfillment.speech);
-                      }, (Math.floor(Math.random() * 1) + 1) * 1000);
-                      return;
-                    }
-                    // If one is good and one is bad, this will be false and output the unsure message instead
-                    // ask later if there's a way of fixing it
-                    // this also works anyways so we can say it's working as intended
-                    else if (context.parameters.technologies.every(techEntered => TECHNOLOGIES_NOT_USED.some(techNotUsed => techNotUsed.test(techEntered)))) {
-                      setTimeout(function() {
+                        return;
+                      }
+                      // If one is good and one is bad, this will be false and output the unsure message instead
+                      // ask later if there's a way of fixing it
+                      // this also works anyways so we can say it's working as intended
+                      else if (context.parameters.technologies.every(techEntered => TECHNOLOGIES_NOT_USED.some(techNotUsed => techNotUsed.test(techEntered)))) {
                         socket.emit('tech not used', 'We apologize but we cannot use certain technology. If you are flexible on this,' +
-                                                     ' please fill out the form below and we\'ll contact you as soon as we can to discuss ' +
-                                                     'other options!');
-                      }, (Math.floor(Math.random() * 1) + 1) * 1000);
-                      botTalks = false;
-                      return;
-                    }
-                    else {
-                      setTimeout(function() {
+                                                       ' please fill out the form below and we\'ll contact you as soon as we can to discuss ' +
+                                                       'other options!');
+                        botTalks = false;
+                        return;
+                      }
+                      else {
                         socket.emit('tech unsure', 'We\'re not sure if we can use some of this technology, fill out the form below and we\'ll get back' +
-                                                   ' to you as soon as we can, so we can discuss other options. We look forward to hearing from you!');
-                      }, (Math.floor(Math.random() * 1) + 1) * 1000);
-                      botTalks = false;
-                      return;
-                    }
-                  }
-                }
-                // All these checks are required as the budget parameter
-                // is created once the intent begins, but does not have a value
-                // set until it gets to that prompt in the conversation
-
-                // if budget has not been checked yet, then check it
-                if (!isBudgetChecked) {
-                  // check if the budget parameter is present in the context
-                  if (context.parameters.budget) {
-
-                    // check if a value has been entered
-                    if (context.parameters.budget[0]) {
-                      isBudgetChecked = true;
-                      // if budget parameter is set, check it against the $1000 restriction
-                      if (Number(context.parameters.budget[0].amount) < 1000) {
-                        // if budget doesn't fit the restriction, output an error message and stop the bot from talking anymore
-                        setTimeout(function() {
-                          socket.emit('budget error', 'We\'re very sorry but unfortunately we cannot take projects with a budget under $1000. ' +
-                                                      'If you are flexible on this amount, please fill out the form below and we will get in touch ' +
-                                                      'as soon as we can.');
-                        }, (Math.floor(Math.random() * 1) + 1) * 1000);
+                                                     ' to you as soon as we can, so we can discuss other options. We look forward to hearing from you!');
                         botTalks = false;
                         return;
                       }
                     }
                   }
-                }
+                  // All these checks are required as the budget parameter
+                  // is created once the intent begins, but does not have a value
+                  // set until it gets to that prompt in the conversation
 
-                setTimeout(function() {
+                  // if budget has not been checked yet, then check it
+                  if (!isBudgetChecked) {
+                    // check if the budget parameter is present in the context
+                    if (context.parameters.budget) {
+
+                      // check if a value has been entered
+                      if (context.parameters.budget[0]) {
+                        isBudgetChecked = true;
+                        // if budget parameter is set, check it against the $1000 restriction
+                        if (Number(context.parameters.budget[0].amount) < 1000) {
+                          // if budget doesn't fit the restriction, output an error message and stop the bot from talking anymore
+                          socket.emit('budget error', 'We\'re very sorry but unfortunately we cannot take projects with a budget under $1000. ' +
+                                                        'If you are flexible on this amount, please fill out the form below and we will get in touch ' +
+                                                        'as soon as we can.');
+                          botTalks = false;
+                          return;
+                        }
+                      }
+                    }
+                  }
+
                   socket.emit('chat message', response.body.result.fulfillment.speech);
-                }, (Math.floor(Math.random() * 1) + 1) * 1000);
+                }
               }
-            }
-          });
-        });
-    }
-  })
-});
+            }); // end of .forEach, to change into a filter
+          }); // end of .then
+    }, 1000); // end of timeout for typing
+  } // end of if botTalks
+}); // end of socket.on
 
 // f(obj, arrayOfKeys) {
 //   check keys, left to right, and find if they exist in the obj
