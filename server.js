@@ -12,7 +12,8 @@ app.use(bodyParser.urlencoded({
 }));
 // my bot key: 2849dfafec2a4452a8c5c4a15813b072
 // zach's bot key: 59b95837db154de18eb3f00d765e7b24
-const API_CLIENT_KEY = '2849dfafec2a4452a8c5c4a15813b072';
+// zachs new bot key: 26fa5ee6713e48babb0fb42de7ef4632
+const API_CLIENT_KEY = '26fa5ee6713e48babb0fb42de7ef4632';
 
 const TECHNOLOGIES_USED = [/angular/i, /angular.?js/i, /react.?js/i, /react/i, /react.?native/i, /swift/i, /objective.?c/i, /java.?script/i, /word.?press/i, /woo.?commerce/i,
 /prestashop/i, /magento/i, /abe/i, /html/i, /css/i, /java/i, /android/i, /apache.?cordova/i, /node.?js/i, /node/i, /php/i, /symfony/i,
