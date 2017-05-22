@@ -31,10 +31,6 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-app.get('/hello', function(req, res) {
-   res.end("Hello World"); 
-});
-
 app.post('/sendmail', function(req, res) {
  let log = JSON.parse(req.body.log)
   console.log(log)
@@ -102,6 +98,8 @@ io.on('connection', function(socket){
 
   socket.on('chat message', (msg) => {
     if (botTalks) {
+      socket.emit('is typing', {isTyping: true});
+
       setTimeout(function() {
         superagent
         .post(`https://api.api.ai/v1/query?v=${version}`)
@@ -111,10 +109,6 @@ io.on('connection', function(socket){
         .send({lang: 'en'})
         .send({sessionId: sessionId})
           .then(response => {
-            var orderContext = response.body.result.contexts.filter(function() {
-              return response.body.result.contexts.name === 'order';
-            });
-            
             response.body.result.contexts.forEach(context => {
               // check for the order context which means an order is in the process of being made
               if (context.name === 'order') {
@@ -177,13 +171,16 @@ io.on('connection', function(socket){
                   }
 
                   socket.emit('chat message', response.body.result.fulfillment.speech);
-                }
-              }
-            }); // end of .forEach, to change into a filter
+                } // end of if context.parameters
+              } // end of if context.name === order
+            }); // end of .forEach
           }); // end of .then
-    }, 1000); // end of timeout for typing
-  } // end of if botTalks
-}); // end of socket.on
+
+        socket.emit('is typing', {isTyping: false});
+      }, 1500); // end of setTimeout for typing
+    } // end of if botTalks
+  }); // end of socket.on chat message
+}); // end of if socket.on connect
 
 // f(obj, arrayOfKeys) {
 //   check keys, left to right, and find if they exist in the obj
@@ -191,5 +188,5 @@ io.on('connection', function(socket){
 
 
 http.listen(process.env.PORT || 3000, function(){
-  console.log(`listening on *:${process.env.PORT}`);
+  console.log('listening on *:3000');
 });
