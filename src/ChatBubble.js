@@ -33,7 +33,8 @@ const styles = {
     color: 'black',
     fontSize: 24,
     margin: 0,
-    lineHeight : 1.2
+    lineHeight : 1.2,
+    wordBreak: 'break-word'
   },
   img: {
     justifyContent: 'center',

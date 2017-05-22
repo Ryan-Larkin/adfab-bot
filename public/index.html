@@ -3,9 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     <link rel="stylesheet" href="css/style.css">
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>React App</title>
   </head>
   <body>
@@ -38,12 +37,22 @@
             <form id="form1" method="post" action="http://localhost:3001/sendmail">
             <div class="row" id="contact-form">
               <div class="five columns offset-by-one">
-                <input type="text" id="contact-form__name" placeholder="name" value="">
+                <input type="text" id="contact-form__firstName" placeholder="First Name" value="">
+              </div>
+              <div class="five columns">
+                <input type="text" id="contact-form__lastName" placeholder="Last Name" value="">
+              </div>
+            </div>
+            <div>
+              <div class="row">
+              <div class="five columns offset-by-one">
+                <input type="text" id="contact-form__number" placeholder="Number" value="">
               </div>
               <div class="five columns">
                 <input type="text" id="contact-form__company" placeholder="company">
               </div>
             </div>
+          </div>
             <div class="row">
               <div class="five columns offset-by-one">
                 <input type="text" id="contact-form__mail" placeholder="mail">
@@ -74,10 +83,23 @@
                </svg>
              </div>
               </div>
+              <div class="two columns offset-by-five">
+                <h5 class="follow-us">follow us</h5>
+                <ul class="social-container">
+                  <li class="social-icon">
+                    <i class="fa fa-twitter" aria-hidden="true"></i>
+                  </li>
+                  <li class="social-icon">
+                    <i class="fa fa-facebook" aria-hidden="true"></i>
+                  </li>
+                  <li class="social-icon">
+                    <i class="fa fa-linkedin" aria-hidden="true"></i>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
-        <script id="form-submit"></script>
     <span class="border-body border-top"></span>
     <span class="border-body border-left"></span>
     <span class="border-body border-right"></span>
