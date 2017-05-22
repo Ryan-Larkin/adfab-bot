@@ -59,6 +59,7 @@ export default class ChatFeed extends Component {
 
 componentDidMount = () => {
 
+
   socket.on('budget error', (msg) => {
     var messages = this.state.messages;
     messages.push(new Message({id: 1, message: msg}));

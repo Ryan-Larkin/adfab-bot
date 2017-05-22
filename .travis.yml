@@ -1,0 +1,30 @@
+language: node_js
+
+node_js:
+  - 4
+  - 5
+  - 6
+  - 7
+
+cache:
+  directories:
+    - node_modules
+
+before_install:
+  - bin/decrypt.sh
+
+install:
+  - bin/install.sh
+
+before_script:
+  - bin/clean.sh
+
+script:
+  - bin/build.sh
+  - bin/unit-test.sh
+
+before_deploy:
+  - bin/prepare-deploy.sh
+
+deploy:
+  - bin/deploy.sh
