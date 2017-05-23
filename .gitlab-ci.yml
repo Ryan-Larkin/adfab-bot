@@ -18,7 +18,7 @@ Build:
 Test:
   stage: Test
   script:
-    - bin/unit-test.sh
+    - bin/test.sh
 
 DeployContinuous:
   stage: Deploy
