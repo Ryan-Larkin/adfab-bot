@@ -15,7 +15,6 @@ pipeline {
         }
         stage('Test') {
             steps {
-                println currentBuild.rawBuild.getPreviousBuild()?.getResult().toString()
                 wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
                     sh 'bin/test.sh'
                 }
