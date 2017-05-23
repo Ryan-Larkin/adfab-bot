@@ -1,10 +1,8 @@
 pipeline {
     agent any
-
     environment {
         ENCRYPTED = credentials('decodebot')
     }
-
     stages {
         stage('Build') {
             steps {
@@ -18,18 +16,6 @@ pipeline {
                 wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
                     sh 'bin/test.sh'
                 }
-                post {
-                    success {
-                        publishHTML target: [
-                            allowMissing: false,
-                            alwaysLinkToLastBuild: false,
-                            keepAll: true,
-                            reportDir: 'build/coverage',
-                            reportFiles: 'index.html',
-                            reportName: 'Coverage'
-                        ]
-                    }
-                }
             }
         }
         stage('Deploy') {
@@ -40,7 +26,6 @@ pipeline {
             }
         }
     }
-
     post {
         success {
             slackSend (color: '#00FF00', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Success after (${env.BUILD_URL})")
