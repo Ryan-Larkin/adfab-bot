@@ -97,7 +97,7 @@ io.on('connection', function(socket){
   .send({sessionId: sessionId})
     .then(response => {
       socket.emit('chat message', response.body.result.fulfillment.speech);
-    })
+    });
 
   let botResponse = "";
 
