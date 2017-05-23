@@ -22,9 +22,3 @@ before_script:
 script:
   - bin/build.sh
   - bin/test.sh
-
-before_deploy:
-  - bin/prepare-deploy.sh
-
-deploy:
-  - bin/deploy.sh
