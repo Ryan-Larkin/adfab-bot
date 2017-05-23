@@ -22,7 +22,8 @@ pipeline {
                     keepAll: false,
                     reportDir: 'build/coverage',
                     reportFiles: 'index.html', 
-                    reportName: 'Coverage'
+                    reportName: 'Coverage',
+                    reportTitles: ''
                 ])
             }
         }
