@@ -43,9 +43,7 @@ pipeline {
 
     post {
         success {
-        }
-        changed {
-            if (buildStatus == 'SUCCESS') {
+            if (currentBuild.rawBuild.getPreviousBuild()?.getResult().toString() == 'FAILURE') {
                 slackSend (color: '#00FF00', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Back to normal after (${env.BUILD_URL})")
             }
         }
