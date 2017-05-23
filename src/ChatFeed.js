@@ -6,20 +6,8 @@ import ChatBubble from './ChatBubble.js'
 import ChatInput from './ChatInput.js'
 import Message from './Message.js'
 import config from '../config.json'
-import marked from 'marked'
 const io = require('socket.io-client')
 const socket = io(config.domain)
-
-marked.setOptions({
-  renderer: new marked.Renderer(),
-  gfm: true,
-  tables: true,
-  breaks: true,
-  pedantic: false,
-  sanitize: true,
-  smartLists: true,
-  smartypants: false
-});
 
 
 const styles = {
@@ -62,46 +50,43 @@ export default class ChatFeed extends Component {
 
 componentDidMount = () => {
 
-  // socket.on('is typing', (msg) => {
-  //     msg.isTyping === true ? this.setState({isTyping : true}) : this.setState({isTyping : false})
-  //   })
-
+// receiving the status of the bot from the server
+// state is used to track if the loading animation should be displayed
     socket.on('is typing', msg => {
-      if (msg.isTyping) {
-        this.setState({isTyping : true})
-        console.log('is typing true')
-      }
-      else {
-        this.setState({isTyping : false})
-        console.log('is typing false')
-      }
+    msg.isTyping ? this.setState({isTyping : true}) : this.setState({isTyping : false})
     })
 
+//waits for custom server response if budget error
   socket.on('budget error', (msg) => {
     var messages = this.state.messages;
     messages.push(new Message({id: 1, message: msg}));
     this.setState({messages : messages});
   });
 
+// waits for custom server response if tech is not used
   socket.on('tech not used', (newMessage) => {
     var messages = this.state.messages;
     messages.push(new Message({id: 1, message: newMessage}));
     this.setState({messages : messages});
   });
 
+// waits for custom server response if tech is unsure
   socket.on('tech unsure', (newMessage) => {
     var messages = this.state.messages;
     messages.push(new Message({id: 1, message: newMessage}));
     this.setState({messages : messages});
   });
 
+// regular response from server : pushes to the message state a new message from the bot
+// id 1 is used to track styles and bot messages
   socket.on('chat message', (newMessage) => {
     var messages = this.state.messages;
     messages.push(new Message({id: 1, message: newMessage}));
     this.setState({messages : messages});
   });
 
-
+// receives the info collected by the server to dynamically set the forms
+// pushes the info to the props to interact with the static html from app.js
   socket.on('order context', (context) => {
     var projectInfo = {}
     if (context) {
@@ -121,12 +106,7 @@ componentDidMount = () => {
     }
   });
 }
-
-// if BIG JSON obj from server (aka newMEssage) ontains form data
-// let's pass it up to app.js via this.props.handleFormData.
-
-
-
+// handles the scrolling
   _scrollToBottom = () => {
     const {chat} = this.refs;
     const scrollHeight = chat.scrollHeight;
@@ -135,6 +115,7 @@ componentDidMount = () => {
     ReactDOM.findDOMNode(chat).scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
   }
 
+// the next two functions are used to render the chat bubbles
   _renderGroup = (messages, index, id) => {
     var group = []
     for (var i = index; messages[i]?messages[i].id === id:false; i--) {
@@ -162,23 +143,13 @@ componentDidMount = () => {
       ) {
         return this._renderGroup(messages, index, curr.id);
       }
-
     });
-
-    // Other end is typing...
-    if (this.props.isTyping) {
-      message_nodes.push(
-        <div key={Math.random().toString(36)} style={Object.assign({}, styles.recipient, styles.chatbubbleWrapper)}>
-          <ChatBubble message={new Message({id:1, message:"..."})} bubbleStyles={this.props.bubbleStyles?this.props.bubbleStyles:{}}/>
-        </div>
-      )
-    }
-
-    // return nodes
     return message_nodes
 
   }
 
+// function to send messages to the server and to add the user messages to the chat feeds
+// passed as a prop to chat input so that the chat input can use it
   _handleMessage = (newMessage) => {
     socket.emit('chat message', newMessage)
     var messages = this.state.messages
@@ -198,6 +169,7 @@ componentDidMount = () => {
         <div ref="chat" className="chat-history" style={styles.chatHistory}>
           <div className="chat-messages">
             {this._renderMessages(this.state.messages)}
+            {/* conditional rendering when the states is set to is typing true */}
             {this.state.isTyping &&
               <ChatBubble message={new Message({id: 1, message: '<img src="default.gif" alt="" width="40px" height="auto">'})} bubbleStyles={this.props.bubbleStyles?this.props.bubbleStyles:{}}/>
             }
@@ -209,7 +181,7 @@ componentDidMount = () => {
   }
 }
 
-
+// defining the proptypes used for chat feed
 ChatFeed.propTypes =  {
   isTyping: PropTypes.bool,
   hasInputField: PropTypes.bool,

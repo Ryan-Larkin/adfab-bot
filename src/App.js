@@ -10,6 +10,7 @@ class ChatApp extends Component {
     }
   }
 
+// this part dynamically fills the form from the chatfeed props
 _handleFormData = (formData) => {
     this.setState({formData : formData})
     var formDataString = JSON.stringify(formData)
