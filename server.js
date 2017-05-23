@@ -13,12 +13,13 @@ app.use(bodyParser.urlencoded({
 // my bot key: 2849dfafec2a4452a8c5c4a15813b072
 // zach's bot key: 59b95837db154de18eb3f00d765e7b24
 // zachs new bot key: 26fa5ee6713e48babb0fb42de7ef4632
-const API_CLIENT_KEY = '26fa5ee6713e48babb0fb42de7ef4632';
+// final bot key: f0debfaa914549b3a490d71a93160669
+const API_CLIENT_KEY = 'f0debfaa914549b3a490d71a93160669';
 
 const TECHNOLOGIES_USED = [/angular/i, /angular.?js/i, /react.?js/i, /react/i, /react.?native/i, /swift/i, /objective.?c/i, /java.?script/i, /word.?press/i, /woo.?commerce/i,
 /prestashop/i, /magento/i, /abe/i, /html/i, /css/i, /java/i, /android/i, /apache.?cordova/i, /node.?js/i, /node/i, /php/i, /symfony/i,
 /zend/i, /laravel/i, /drupal/i, /meteor/i, /express/i, /j.?query/i, /unity/i, /vr/i, /virtual.?reality/i, /augmented.?reality/i,
-/phone.?gap/i];
+/phone.?gap/i, /i.?don.?t.?know/i];
 
 const TECHNOLOGIES_NOT_USED = [/shopify/i, /c.?sharp/i, /visual.?basic/i, /cobol/i, /ruby/i];
 
@@ -123,27 +124,27 @@ io.on('connection', function(socket){
       .send({lang: 'en'})
       .send({sessionId: sessionId})
         .then(response => {
-          var contextName = response.body.result.contexts.filter(context => {
+          var orderContext = response.body.result.contexts.filter(context => {
             return context.name === 'order';
           });
 
           // to use later to replace the forEach
-          response.body.result.contexts.forEach(context => {
+          //response.body.result.contexts.forEach(context => {
             // check for the order context which means an order is in the process of being made
-            if (context.name === 'order' && context.parameters) {
+            if (orderContext[0].name === 'order' && orderContext[0].parameters) {
                 // always send the context to the front end
-                socket.emit('order context', context.parameters);
+                socket.emit('order context', orderContext[0].parameters);
 
                 // if tech has not been checked yet, then check it
                 if (!isTechChecked) {
-                  if (context.parameters['e-comm-tech'] && context.parameters['e-comm-tech'].length) {
+                  if (orderContext[0].parameters['e-comm-tech'] && orderContext[0].parameters['e-comm-tech'].length) {
                     isTechChecked = true;
 
-                    if (context.parameters['e-comm-tech'].every(techEntered => E_COMM_TECH.some(techUsed => techUsed.test(techEntered)))) {
+                    if (orderContext[0].parameters['e-comm-tech'].every(techEntered => E_COMM_TECH.some(techUsed => techUsed.test(techEntered)))) {
                       socket.emit('chat message', response.body.result.fulfillment.speech);
                       return;
                     }
-                    else if (context.parameters['e-comm-tech'].every(techEntered => TECHNOLOGIES_NOT_USED.some(techNotUsed => techNotUsed.test(techEntered)))) {
+                    else if (orderContext[0].parameters['e-comm-tech'].every(techEntered => TECHNOLOGIES_NOT_USED.some(techNotUsed => techNotUsed.test(techEntered)))) {
                       socket.emit('tech not used', TECH_UNUSED_MESSAGE);
                       return;
                     }
@@ -153,13 +154,13 @@ io.on('connection', function(socket){
                     }
                   }
 
-                  if (context.parameters['mobile-tech'] && context.parameters['mobile-tech'].length) {
+                  if (orderContext[0].parameters['mobile-tech'] && orderContext[0].parameters['mobile-tech'].length) {
                     isTechChecked = true;
-                    if (context.parameters['mobile-tech'].every(techEntered => MOBILE_TECH.some(techUsed => techUsed.test(techEntered)))) {
+                    if (orderContext[0].parameters['mobile-tech'].every(techEntered => MOBILE_TECH.some(techUsed => techUsed.test(techEntered)))) {
                       socket.emit('chat message', response.body.result.fulfillment.speech);
                       return;
                     }
-                    else if (context.parameters['mobile-tech'].every(techEntered => TECHNOLOGIES_NOT_USED.some(techNotUsed => techNotUsed.test(techEntered)))) {
+                    else if (orderContext[0].parameters['mobile-tech'].every(techEntered => TECHNOLOGIES_NOT_USED.some(techNotUsed => techNotUsed.test(techEntered)))) {
                       socket.emit('tech not used', TECH_UNUSED_MESSAGE);
                       return;
                     }
@@ -169,13 +170,13 @@ io.on('connection', function(socket){
                     }
                   }
 
-                  if (context.parameters['web-app-tech'] && context.parameters['web-app-tech'].length) {
+                  if (orderContext[0].parameters['web-app-tech'] && orderContext[0].parameters['web-app-tech'].length) {
                     isTechChecked = true;
-                    if (context.parameters['web-app-tech'].every(techEntered => WEB_APP_TECH.some(techUsed => techUsed.test(techEntered)))) {
+                    if (orderContext[0].parameters['web-app-tech'].every(techEntered => WEB_APP_TECH.some(techUsed => techUsed.test(techEntered)))) {
                       socket.emit('chat message', response.body.result.fulfillment.speech);
                       return;
                     }
-                    else if (context.parameters['web-app-tech'].every(techEntered => TECHNOLOGIES_NOT_USED.some(techNotUsed => techNotUsed.test(techEntered)))) {
+                    else if (orderContext[0].parameters['web-app-tech'].every(techEntered => TECHNOLOGIES_NOT_USED.some(techNotUsed => techNotUsed.test(techEntered)))) {
                       socket.emit('tech not used', TECH_UNUSED_MESSAGE);
                       return;
                     }
@@ -187,10 +188,10 @@ io.on('connection', function(socket){
                 }
 
                 // if budget has not been checked yet, then check it
-                if (!isBudgetChecked && context.parameters.budget) {
+                if (!isBudgetChecked && orderContext[0].parameters.budget) {
                   isBudgetChecked = true;
                   // if budget parameter is set, check it against the $1000 restriction
-                  if (Number(context.parameters.budget.amount) < 1000) {
+                  if (Number(orderContext[0].parameters.budget.amount) < 1000) {
                     // if budget doesn't fit the restriction, output an error message and stop the bot from talking anymore
                     socket.emit('budget error', 'We\'re very sorry but unfortunately we cannot take projects with a budget under $1000. ' +
                                                 'If you are flexible on this amount, please submit the form below and we will get in touch ' +
@@ -201,7 +202,7 @@ io.on('connection', function(socket){
 
                 socket.emit('chat message', response.body.result.fulfillment.speech);
             } // end of if context.name === order
-          }); // end of .forEach
+          //}); // end of .forEach
         }); // end of .then
       socket.emit('is typing', {isTyping: false});
     }, 1500); // end of setTimeout for typing
