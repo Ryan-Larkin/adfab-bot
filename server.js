@@ -12,6 +12,7 @@ app.use(bodyParser.urlencoded({
 }));
 // my bot key: 2849dfafec2a4452a8c5c4a15813b072
 // zach's bot key: 59b95837db154de18eb3f00d765e7b24
+// zachs new bot key: 26fa5ee6713e48babb0fb42de7ef4632
 const API_CLIENT_KEY = '26fa5ee6713e48babb0fb42de7ef4632';
 
 const TECHNOLOGIES_USED = [/angular/i, /angular.?js/i, /react.?js/i, /react/i, /react.?native/i, /swift/i, /objective.?c/i, /java.?script/i, /word.?press/i, /woo.?commerce/i,
@@ -102,7 +103,6 @@ io.on('connection', function(socket){
   // Once they're checked, they're good for the rest of the conversation
   let isTechChecked = false;
   let isBudgetChecked = false;
-  let isTyping = true;
 
   socket.on('chat message', (msg) => {
 
@@ -133,42 +133,94 @@ io.on('connection', function(socket){
                   console.log(context.parameters['mobile-tech']);
                   console.log(context.parameters['web-app-tech']);
                   // if tech has not been checked yet, then check it
-                  if (!isTechChecked && (context.parameters.technologies && context.parameters.technologies.length
-                                      || context.parameters['e-comm-tech'] && context.parameters['e-comm-tech'].length
-                                      || context.parameters['mobile-tech'] && context.parameters['mobile-tech'].length
-                                      || context.parameters['web-app-tech'] && context.parameters['web-app-tech'].length)) {
-                    isTechChecked = true;
 
-                    if (context.parameters.technologies.every(techEntered => TECHNOLOGIES_USED.some(techUsed => techUsed.test(techEntered)))
-                     || context.parameters['e-comm-tech'].every(techEntered => E_COMM_TECH.some(techUsed => techUsed.test(techEntered)))
-                     || context.parameters['mobile-tech'].every(techEntered => MOBILE_TECH.some(techUsed => techUsed.test(techEntered)))
-                     || context.parameters['web-app-tech'].every(techEntered => WEB_APP_TECH.some(techUsed => techUsed.test(techEntered)))) {
-                      socket.emit('chat message', response.body.result.fulfillment.speech);
-                      return;
+                  if (!isTechChecked) {
+                    if (context.parameters.technologies && context.parameters.technologies.length) {
+                      isTechChecked = true;
+
+                      if (context.parameters.technologies.every(techEntered => TECHNOLOGIES_USED.some(techUsed => techUsed.test(techEntered)))) {
+                        socket.emit('chat message', response.body.result.fulfillment.speech);
+                        return;
+                      }
+                      else if (context.parameters.technologies.every(techEntered => TECHNOLOGIES_NOT_USED.some(techNotUsed => techNotUsed.test(techEntered)))) {
+                        socket.emit('tech not used', 'We apologize but we cannot use certain technology. If you are flexible on this,' +
+                                                       ' please fill out the form below and we\'ll contact you as soon as we can to discuss ' +
+                                                       'other options!');
+                        botTalks = false;
+                        return;
+                      }
+                      else {
+                        socket.emit('tech unsure', 'We\'re not sure if we can use some of this technology, fill out the form below and we\'ll get back' +
+                                                     ' to you as soon as we can, so we can discuss other options. We look forward to hearing from you!');
+                        botTalks = false;
+                        return;
+                      }
+
                     }
-                    // If one is good and one is bad, this will be false and output the unsure message instead
-                    // ask later if there's a way of fixing it
-                    // this also works anyways so we can say it's working as intended
-                    else if (context.parameters.technologies.every(techEntered => TECHNOLOGIES_NOT_USED.some(techNotUsed => techNotUsed.test(techEntered)))
-                          || context.parameters['e-comm-tech'].every(techEntered => TECHNOLOGIES_NOT_USED.some(techNotUsed => techNotUsed.test(techEntered)))
-                          || context.parameters['mobile-tech'].every(techEntered => TECHNOLOGIES_NOT_USED.some(techNotUsed => techNotUsed.test(techEntered)))
-                          || context.parameters['web-app-tech'].every(techEntered => TECHNOLOGIES_NOT_USED.some(techNotUsed => techNotUsed.test(techEntered)))) {
-                      socket.emit('tech not used', 'We apologize but we cannot use certain technology. If you are flexible on this,' +
-                                                     ' please fill out the form below and we\'ll contact you as soon as we can to discuss ' +
-                                                     'other options!');
-                      botTalks = false;
-                      return;
+
+                    if (context.parameters['e-comm-tech'] && context.parameters['e-comm-tech'].length) {
+                      isTechChecked = true;
+                      if (context.parameters['e-comm-tech'].every(techEntered => E_COMM_TECH.some(techUsed => techUsed.test(techEntered)))) {
+                        socket.emit('chat message', response.body.result.fulfillment.speech);
+                        return;
+                      }
+                      else if (context.parameters['e-comm-tech'].every(techEntered => TECHNOLOGIES_NOT_USED.some(techNotUsed => techNotUsed.test(techEntered)))) {
+                        socket.emit('tech not used', 'We apologize but we cannot use certain technology. If you are flexible on this,' +
+                                                       ' please fill out the form below and we\'ll contact you as soon as we can to discuss ' +
+                                                       'other options!');
+                        botTalks = false;
+                        return;
+                      }
+                      else {
+                        socket.emit('tech unsure', 'We\'re not sure if we can use some of this technology, fill out the form below and we\'ll get back' +
+                                                     ' to you as soon as we can, so we can discuss other options. We look forward to hearing from you!');
+                        botTalks = false;
+                        return;
+                      }
                     }
-                    else {
-                      socket.emit('tech unsure', 'We\'re not sure if we can use some of this technology, fill out the form below and we\'ll get back' +
-                                                   ' to you as soon as we can, so we can discuss other options. We look forward to hearing from you!');
-                      botTalks = false;
-                      return;
+
+                    if (context.parameters['mobile-tech'] && context.parameters['mobile-tech'].length) {
+                      isTechChecked = true;
+                      if (context.parameters['mobile-tech'].every(techEntered => MOBILE_TECH.some(techUsed => techUsed.test(techEntered)))) {
+                        socket.emit('chat message', response.body.result.fulfillment.speech);
+                        return;
+                      }
+                      else if (context.parameters['mobile-tech'].every(techEntered => TECHNOLOGIES_NOT_USED.some(techNotUsed => techNotUsed.test(techEntered)))) {
+                        socket.emit('tech not used', 'We apologize but we cannot use certain technology. If you are flexible on this,' +
+                                                       ' please fill out the form below and we\'ll contact you as soon as we can to discuss ' +
+                                                       'other options!');
+                        botTalks = false;
+                        return;
+                      }
+                      else {
+                        socket.emit('tech unsure', 'We\'re not sure if we can use some of this technology, fill out the form below and we\'ll get back' +
+                                                     ' to you as soon as we can, so we can discuss other options. We look forward to hearing from you!');
+                        botTalks = false;
+                        return;
+                      }
+                    }
+
+                    if (context.parameters['web-app-tech'] && context.parameters['web-app-tech'].length) {
+                      isTechChecked = true;
+                      if (context.parameters['web-app-tech'].every(techEntered => WEB_APP_TECH.some(techUsed => techUsed.test(techEntered)))) {
+                        socket.emit('chat message', response.body.result.fulfillment.speech);
+                        return;
+                      }
+                      else if (context.parameters['web-app-tech'].every(techEntered => TECHNOLOGIES_NOT_USED.some(techNotUsed => techNotUsed.test(techEntered)))) {
+                        socket.emit('tech not used', 'We apologize but we cannot use certain technology. If you are flexible on this,' +
+                                                       ' please fill out the form below and we\'ll contact you as soon as we can to discuss ' +
+                                                       'other options!');
+                        botTalks = false;
+                        return;
+                      }
+                      else {
+                        socket.emit('tech unsure', 'We\'re not sure if we can use some of this technology, fill out the form below and we\'ll get back' +
+                                                     ' to you as soon as we can, so we can discuss other options. We look forward to hearing from you!');
+                        botTalks = false;
+                        return;
+                      }
                     }
                   }
-                  // All these checks are required as the budget parameter
-                  // is created once the intent begins, but does not have a value
-                  // set until it gets to that prompt in the conversation
 
                   // if budget has not been checked yet, then check it
                   if (!isBudgetChecked && context.parameters.budget) {
@@ -189,8 +241,8 @@ io.on('connection', function(socket){
             }); // end of .forEach
           }); // end of .then
 
-        isTyping = false;
         socket.emit('is typing', {isTyping: false});
+
       }, 1500); // end of setTimeout for typing
     } // end of if botTalks
   }); // end of socket.on chat message
