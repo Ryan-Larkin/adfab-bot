@@ -87,13 +87,18 @@ componentDidMount = () => {
 
 // receives the info collected by the server to dynamically set the forms
 // pushes the info to the props to interact with the static html from app.js
+// web-project-type   e-comm-tech.original
+
   socket.on('order context', (context) => {
     var projectInfo = {}
     if (context) {
       console.log(context)
-      projectInfo.projectType = context['project-type']
-      projectInfo.progressType = context['progress-type']
-      projectInfo.technologies = context['technologies']
+      if(context['mobile-type.original']) projectInfo.projectType = context['mobile-type.original']
+      if(context['web-type-normal.original']) projectInfo.projectType = context['web-type-normal.original']
+      if(context['web-type-ecomm.original']) projectInfo.projectType = context['web-type-ecomm.original']
+      if(context['mobile-tech.original']) projectInfo.technologies = context['mobile-tech.original']
+      if(context['web-app-tech.original']) projectInfo.technologies = context['web-app-tech.original']
+      if(context['e-comm-tech.original']) projectInfo.technologies = context['e-comm-tech.original']
       projectInfo.deadline = context['deadline.original']
       projectInfo.budget = context['budget.original']
       projectInfo.firstName = context['given-name.original']

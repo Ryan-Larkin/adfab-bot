@@ -51,20 +51,20 @@ app.post('/sendmail', function(req, res) {
   console.log(log)
   console.log(log.progressType)
   let botConvoEmail = {
-      from: '"Ryan" <ryan.r.larkin@gmail.com>',
+      from: '"Fab" <ryan.r.larkin@gmail.com>',
       to: 'g.bibeaulaviolette@gmail.com',
       subject: 'Test Form Submit',
       text: 'Hello world',
       html: `
-        <5>Fab has a new lead for you<5>
+        Fab has a new lead for you
          <ul>
+           <li>First Name : ${log.firstName}</li>
            <li>Last Name : ${log.lastName}</li>
            <li>Phone Number : ${log.phoneNumber}</li>
            <li>email : ${log.email}</li>
            <li>Company : ${log.company}</li>
            <li>City : ${log.city}</li>
            <li>Project Type : ${log.projectType}</li>
-           <li>State of the project : ${log.progressType}</li>
            <li>Budget : ${log.budget}</li>
            <li>technologies : ${log.technologies}</li>
            <li>deadline : ${log.deadline}</li>

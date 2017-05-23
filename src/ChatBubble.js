@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 
+
+//setting the custom styles for the chat bubbles
 const styles = {
   chatbubble: {
     background: "linear-gradient(to left, #fcff00, #fdff99)",
