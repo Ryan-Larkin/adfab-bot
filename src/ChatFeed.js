@@ -54,11 +54,28 @@ export default class ChatFeed extends Component {
 
   constructor(props) {
     super(props)
-    this.state = {messages: []}
+    this.state = {
+      messages: [],
+      isTyping: false
+    }
   }
 
 componentDidMount = () => {
 
+  // socket.on('is typing', (msg) => {
+  //     msg.isTyping === true ? this.setState({isTyping : true}) : this.setState({isTyping : false})
+  //   })
+
+    socket.on('is typing', msg => {
+      if (msg.isTyping) {
+        this.setState({isTyping : true})
+        console.log('is typing true')
+      }
+      else {
+        this.setState({isTyping : false})
+        console.log('is typing false')
+      }
+    })
 
   socket.on('budget error', (msg) => {
     var messages = this.state.messages;
@@ -88,17 +105,18 @@ componentDidMount = () => {
   socket.on('order context', (context) => {
     var projectInfo = {}
     if (context) {
+      console.log(context)
       projectInfo.projectType = context['project-type']
       projectInfo.progressType = context['progress-type']
       projectInfo.technologies = context['technologies']
       projectInfo.deadline = context['deadline.original']
       projectInfo.budget = context['budget.original']
-      projectInfo.firstName = context['first.original']
-      projectInfo.lastName = context['lastname.original']
+      projectInfo.firstName = context['given-name.original']
+      projectInfo.lastName = context['last-name.original']
       projectInfo.company = context['company.original']
       projectInfo.city = context['geo-city']
       projectInfo.phoneNumber = context['phone-number.original']
-      projectInfo.email = context['email.original']
+      projectInfo.email = context['email']
       this.props.handleFormData(projectInfo)
     }
   });
@@ -180,6 +198,9 @@ componentDidMount = () => {
         <div ref="chat" className="chat-history" style={styles.chatHistory}>
           <div className="chat-messages">
             {this._renderMessages(this.state.messages)}
+            {this.state.isTyping &&
+              <ChatBubble message={new Message({id: 1, message: '<img src="default.gif" alt="" width="40px" height="auto">'})} bubbleStyles={this.props.bubbleStyles?this.props.bubbleStyles:{}}/>
+            }
           </div>
         </div>
         {inputField}

@@ -68,7 +68,7 @@ export default class ChatBubble extends Component {
               (this.props.bubblesCentered?{}:styles.recipientChatbubbleOrientationNormal),
               this.state.bubbleStyles.chatbubble
             )}>
-            <img src="http://connect.adfab.fr/wp-content/uploads/2015/07/logo_adfab.png" id="logo" height="40px" weight="40px"/>
+            <img src="http://connect.adfab.fr/wp-content/uploads/2015/07/logo_adfab.png" id="logo" height="40px" alt="" width="40px"/>
               <p style={Object.assign({},styles.p, this.state.bubbleStyles.text)} dangerouslySetInnerHTML={{__html: message}}></p>
             </div>
         )
