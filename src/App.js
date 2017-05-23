@@ -14,11 +14,11 @@ _handleFormData = (formData) => {
     this.setState({formData : formData})
     var formDataString = JSON.stringify(formData)
     document.getElementById("logInput").value = formDataString
-    document.getElementById('contact-form__firstName').value = `${formData.firstName !== 'undefined'  ? formData.firstName :'First Name'}`
-    document.getElementById('contact-form__lastName').value = `${formData.lastName !== 'undefined'  ? formData.lastName : 'Last Name'}`
-    document.getElementById('contact-form__number').value = `${formData.number !== 'undefined'  ? formData.phoneNumber : 'Number'}`
-    document.getElementById('contact-form__company').value = `${formData.company !== 'undefined' ? formData.company : 'Company'}`
-    document.getElementById('contact-form__mail').value = `${formData.email !== 'undefined' ? formData.email : 'Email'}`
+    document.getElementById('contact-form__firstName').value = `${formData.firstName !== undefined  ? formData.firstName :'First Name'}`
+    document.getElementById('contact-form__lastName').value = `${formData.lastName !== undefined  ? formData.lastName : 'Last Name'}`
+    document.getElementById('contact-form__number').value = `${formData.phoneNumber !== undefined  ? formData.phoneNumber : 'Number'}`
+    document.getElementById('contact-form__company').value = `${formData.company !== undefined ? formData.company : 'Company'}`
+    document.getElementById('contact-form__mail').value = `${formData.email !== undefined ? formData.email : 'Email'}`
 }
 
 
