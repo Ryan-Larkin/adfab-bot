@@ -10,7 +10,7 @@ LOCALDIR=`dirname $0`
 cd ${LOCALDIR}/..
 DEPLOY_ENVIRONMENT=$1
 env
-if [ "${DEPLOY_ENVIRONMENT}" == "Production" -a "${branch}" != "master" ] ;
+if [ "${DEPLOY_ENVIRONMENT}" == "Production" -a "${BRANCH}" != "master" ] ;
 then
 	echo "Only master branch can be deployed in production"
 	exit 1
