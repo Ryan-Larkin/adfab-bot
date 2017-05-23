@@ -1,24 +1,26 @@
 language: node_js
-
 node_js:
-  - 4
-  - 5
-  - 6
-  - 7
-
+- 4
+- 5
+- 6
+- 7
 cache:
   directories:
-    - node_modules
-
+  - node_modules
 before_install:
-  - bin/decrypt.sh
-
+- bin/decrypt.sh
 install:
-  - bin/install.sh
-
+- bin/install.sh
 before_script:
-  - bin/clean.sh
-
+- bin/clean.sh
 script:
-  - bin/build.sh
-  - bin/test.sh
+- bin/build.sh
+- bin/test.sh
+notifications:
+  slack:
+    rooms:
+      secure: FCjxnrYzpHkZOyqa1bcwxB8nr1VSQzGfdxSomMHXGk4+Fd9a10EchcQAMgkngi0cCZZEeV+UR2ZD92tsUqW2uwd1hWuM4Ei1r01mbOjFu1MIp/G9BR81jkdJBqXHXhhySdUV2To8XRMLxyDMNXrbwNVKa0nLl/bLM18ec08qCzt9pkBlnn36Ze3bsiAqPjNvl4kOsizZzkOgIqbpd7unYLGtJ4h6nBwUotvv9ikjq+ksWHdLD9Z92lg4bAxo9yiruYXslhZIH9O925Vsjmxw3YKTmn+U1enq8En+9WsAstCcS2zH/BZBesqjCSiJQnkvTrAnFhV248CnJihJosU8aCzC25QTUSZ3byaZc9STiZxIsJuAFrfJW1JTa45Dce81kjDHN/7CbM6/XaliJGJhNRlimIxuoyX7aGgin+C0NDFythNU1+BsvH1ditds8nqPCQUhFF1L2ZmQmgwMOBi84sBqm72s4NgDutqht+Gi0b/3UDUitjcGHs1YFqqJZHNOOVEbOqGrM10jyqRT1U63jfVxjRl7ajsXgOpl/PRrR14tg1bEESJUdro2+BOAW8InrdRViDbRaJw3kQ/VQgZLsylxrHIew0W2WjLlaZMcHTz1JntRgRWYZ1Tl3qm95j7SxipDZtzFE8eeQpzJWw9iXfzxJpyxuV8JBK2YA6GeQPU=
+    on_success: change
+    on_failure: always
+    template:
+    - "%{repository_slug}/%{branch} - #%{commit} %{result} after %{elapsed_time} (%{build_url})"
