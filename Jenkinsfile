@@ -16,6 +16,14 @@ pipeline {
                 wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
                     sh 'bin/test.sh'
                 }
+                publishHTML([
+                    allowMissing: true,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: false,
+                    reportDir: 'build/coverage',
+                    reportFiles: 'index.html', 
+                    reportName: 'Coverage'
+                ])
             }
         }
         stage('Deploy') {
