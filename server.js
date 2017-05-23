@@ -16,19 +16,19 @@ app.use(bodyParser.urlencoded({
 // final bot key: f0debfaa914549b3a490d71a93160669
 const API_CLIENT_KEY = 'f0debfaa914549b3a490d71a93160669';
 
-const TECHNOLOGIES_USED = [/angular/i, /angular.?js/i, /react.?js/i, /react/i, /react.?native/i, /swift/i, /objective.?c/i, /java.?script/i, /word.?press/i, /woo.?commerce/i,
-/prestashop/i, /magento/i, /abe/i, /html/i, /css/i, /java/i, /android/i, /apache.?cordova/i, /node.?js/i, /node/i, /php/i, /symfony/i,
-/zend/i, /laravel/i, /drupal/i, /meteor/i, /express/i, /j.?query/i, /unity/i, /vr/i, /virtual.?reality/i, /augmented.?reality/i,
-/phone.?gap/i, /i.?don.?t.?know/i];
+// const TECHNOLOGIES_USED = [/angular/i, /angular.?js/i, /react.?js/i, /react/i, /react.?native/i, /swift/i, /objective.?c/i, /java.?script/i, /word.?press/i, /woo.?commerce/i,
+// /prestashop/i, /magento/i, /abe/i, /html/i, /css/i, /java/i, /android/i, /apache.?cordova/i, /node.?js/i, /node/i, /php/i, /symfony/i,
+// /zend/i, /laravel/i, /drupal/i, /meteor/i, /express/i, /j.?query/i, /unity/i, /vr/i, /virtual.?reality/i, /augmented.?reality/i,
+// /phone.?gap/i, /i.?don.?t.?know/i];
 
 const TECHNOLOGIES_NOT_USED = [/shopify/i, /c.?sharp/i, /visual.?basic/i, /cobol/i, /ruby/i];
 
-const E_COMM_TECH = [/magento/i, /prestashop/i, /word.?press/i, /woo.?commerce/i];
+const E_COMM_TECH = [/magento/i, /prestashop/i, /word.?press/i, /woo.?commerce/i, /i.?don.?t.?know/i];
 
 const WEB_APP_TECH = [/angular/i, /angular.?js/i, /react.?js/i, /react/i, /node.?js/i, /node/i, /php/i,
-                      /word.?press/i, /drupal/i];
+                      /word.?press/i, /drupal/i, /i.?don.?t.?know/i];
 
-const MOBILE_TECH = [/react.?native/i, /swift/i, /objective.?c/i, /java/i];
+const MOBILE_TECH = [/react.?native/i, /swift/i, /objective.?c/i, /java/i, /i.?don.?t.?know/i];
 
 const TECH_UNUSED_MESSAGE = 'We apologize but we cannot use certain technology. If you are flexible on this, please continue on so we can ' +
                             'collect your contact details and we can discuss other options. Let\'s start with your first and last name please.';
@@ -52,20 +52,20 @@ app.post('/sendmail', function(req, res) {
   console.log(log)
   console.log(log.progressType)
   let botConvoEmail = {
-      from: '"Ryan" <ryan.r.larkin@gmail.com>',
+      from: '"Fab" <ryan.r.larkin@gmail.com>',
       to: 'g.bibeaulaviolette@gmail.com',
       subject: 'Test Form Submit',
       text: 'Hello world',
       html: `
-        <5>Fab has a new lead for you<5>
+        Fab has a new lead for you
          <ul>
+           <li>First Name : ${log.firstName}</li>
            <li>Last Name : ${log.lastName}</li>
            <li>Phone Number : ${log.phoneNumber}</li>
            <li>email : ${log.email}</li>
            <li>Company : ${log.company}</li>
            <li>City : ${log.city}</li>
            <li>Project Type : ${log.projectType}</li>
-           <li>State of the project : ${log.progressType}</li>
            <li>Budget : ${log.budget}</li>
            <li>technologies : ${log.technologies}</li>
            <li>deadline : ${log.deadline}</li>

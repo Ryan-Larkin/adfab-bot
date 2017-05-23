@@ -23,6 +23,8 @@ _handleFormData = (formData) => {
 }
 
 
+
+// renders the chat feed and sets some styles to it
 render() {
     return (
       <div className="ChatApp">
