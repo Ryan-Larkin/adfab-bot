@@ -31,7 +31,6 @@ pipeline {
             slackSend (color: '#00FF00', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Success after (${env.BUILD_URL})")
         }
         failure {
-            sh 'env'
             slackSend (color: '#FF0000', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Failure after (${env.BUILD_URL})")
         }
     }
