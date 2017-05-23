@@ -15,6 +15,7 @@ pipeline {
         }
         stage('Test') {
             steps {
+                println currentBuild.rawBuild.getPreviousBuild()?.getResult().toString()
                 wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'XTerm']) {
                     sh 'bin/test.sh'
                 }
@@ -43,11 +44,10 @@ pipeline {
 
     post {
         success {
-            if (currentBuild.rawBuild.getPreviousBuild()?.getResult().toString() == 'FAILURE') {
-                slackSend (color: '#00FF00', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Back to normal after (${env.BUILD_URL})")
-            }
+            slackSend (color: '#00FF00', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Success after (${env.BUILD_URL})")
         }
         failure {
+            sh 'env'
             slackSend (color: '#FF0000', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Failure after (${env.BUILD_URL})")
         }
     }
